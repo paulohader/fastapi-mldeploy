@@ -11,7 +11,7 @@ import pickle
 # 2. Create the API
 app = FastAPI()
 pickle_in = open("classifier.pkl", "rb")
-classifier = pickle.load(pickle_in)
+classifier=pickle.load(pickle_in)
 
 # 3. Index route, opens automatically on http://127.0.0.1:8000
 @app.get('/')
@@ -28,15 +28,11 @@ def get_name(name: str):
 @app.post('/predcit')
 def predict_banknote(data:BankNote):
     data = data.dict()
-    print(data)
-    print("Hello")
     variance=data['variance']
-    print(variance)
     skewness=data['skewness']
     curtosis=data['curtosis']
     entropy=data['entropy']
-    print(classifier.predict([[variance, skewness, curtosis, entropy]]))
-    print("Hello")
+    # print(classifier.predict([[variance, skewness, curtosis, entropy]]))
     prediction = classifier.predict ([[variance, skewness, curtosis, entropy]])
     if(prediction[0]>0.5):
         prediction ="Fake note"
@@ -52,4 +48,5 @@ def predict_banknote(data:BankNote):
 if __name__ == '__main__':
     uvicorn.run(app, host='127.0.0.1', port=8000)
     
-    
+# to run the app, type in the terminal (within the folder of the files):
+# uvicorn app:app --reload
